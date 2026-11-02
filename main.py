@@ -1,6 +1,6 @@
 from src.fetch_data import load_weekly_stats
 from src.rank_players import rank_quarterbacks, rank_running_backs, rank_receivers, rank_all_players
-from src.player_content import get_player_stats
+from src.player_content import get_player_stats, generate_readable_stat_line
 import polars as pl
 
 pl.Config.set_tbl_cols(-1)
@@ -74,7 +74,11 @@ def main():
     print("\nJALEN COKER CONTENT DATA")
     print(get_player_stats(stats, "Jalen Coker"))
 
+    caleb = get_player_stats(stats, "Caleb Williams")
+    coker = get_player_stats(stats, "Jalen Coker")
 
+    print(generate_readable_stat_line(caleb))
+    print(generate_readable_stat_line(coker))
 
 if __name__ == "__main__":
     main()

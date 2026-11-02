@@ -37,3 +37,27 @@ def get_player_stats(stats: pl.DataFrame, player_name: str) -> dict:
         })
 
     return result
+
+
+
+def generate_readable_stat_line(player: dict) -> str:
+    position = player["position"]
+
+    if position == "QB":
+        total_yards = player["passing_yards"] + player["rushing_yards"]
+        total_tds = player["passing_tds"] + player["rushing_tds"]
+
+        return (
+            f"{total_yards} total yards | "
+            f"{total_tds} total TD | "
+            f"{player['interceptions']} INT"
+        )
+
+    else:
+        total_tds = player["receiving_tds"] + player["rushing_tds"]
+
+        return (
+            f"{player['receptions']} REC | "
+            f"{player['receiving_yards']} REC YDS | "
+            f"{total_tds} total TD"
+        )
