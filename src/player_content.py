@@ -33,7 +33,8 @@ def get_player_stats(stats: pl.DataFrame, player_name: str) -> dict:
             "receiving_yards": player_data["receiving_yards"],
             "receiving_tds": player_data["receiving_tds"],
             "rushing_yards": player_data["rushing_yards"],
-            "rushing_tds": player_data["rushing_tds"]
+            "rushing_tds": player_data["rushing_tds"],
+            "carries": player_data["carries"]
         })
 
     return result

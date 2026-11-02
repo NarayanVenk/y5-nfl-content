@@ -1,5 +1,8 @@
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
+from src.content_manager import load_content, get_approved_posts, combine_content
+
+import json
 
 GRAPHIC_WIDTH = 1080
 GRAPHIC_HEIGHT = 1350
@@ -179,24 +182,102 @@ def add_watermark(image: Image.Image) -> Image.Image:
     return image
 
 
-if __name__ == "__main__":
-    background = create_background(
-        "assets/player_images/calebwilliams.png"
-    )
 
-    background = add_dark_overlay(background)
-    background = add_y5_logo(background)
-    background = add_team_logo(background, "CHI")
-    background = add_stats_panel(
-        background,
-        [
-            ("269", "PASS YDS"),
-            ("2", "PASS TD"),
-            ("65", "RUSH YDS"),
-            ("2", "RUSH TD")
+def get_graphic_stats(player: dict) -> list[tuple]:
+    position = player["position"]
+
+    if position == "QB":
+        total_tds = player["passing_tds"] + player["rushing_tds"]
+
+        stats = [
+            (player["passing_yards"], "PASS YDS"),
+            (total_tds, "TOTAL TD")
         ]
-    )
-    background = add_headline(background, "Caleb Williams is Elite?")
+
+        if player["rushing_yards"] >= 30:
+            stats.append((player["rushing_yards"], "RUSH YDS"))
+        else:
+            stats.append((player["interceptions"], "INT"))
+
+        return stats
+
+    
+    
+    elif position == "RB":
+        total_yards = player["rushing_yards"] + player["receiving_yards"]
+        total_tds = player["rushing_tds"] + player["receiving_tds"]
+
+        stats = [
+            (total_yards, "TOTAL YDS"),
+            (total_tds, "TOTAL TD")
+        ]
+
+        if player["receptions"] >= 4:
+            stats.append((player["receptions"], "REC"))
+        else:
+            stats.append((player["carries"], "CAR"))
+
+        return stats
+
+
+
+    elif position in ["WR", "TE"]:
+        total_tds = player["rushing_tds"] + player["receiving_tds"]
+        return [
+            (player["receptions"], "REC"),
+            (player["receiving_yards"], "REC YDS"),
+            (total_tds, "TD")
+        ]
+
+    return []
+
+
+
+def generate_player_graphic(post: dict, player_image_path: str) -> None:
+    background = create_background(player_image_path)
+    background = add_dark_overlay(background)
+
+    background = add_y5_logo(background)
+    background = add_team_logo(background, post["team"])
+
+    stats = get_graphic_stats(post)
+    background = add_stats_panel(background, stats)
+
+    background = add_headline(background, post["graphic_headline"])
     background = add_watermark(background)
-    background.save("test_background.png")
-    print("Created test_background.png!")
+
+    
+    output_dir = Path("output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    player_name = post["player"].lower().replace(" ", "_")
+    season = post["season"]
+    week = post["week"]
+
+    filename = f"{player_name}_{season}_week{week}.png"
+    output_path = output_dir / filename
+
+    background.save(output_path)
+
+    print(f"Created {output_path}!")
+
+
+
+
+
+if __name__ == "__main__":
+    candidates = load_content("y5_candidates.json")
+    content = load_content("y5_content.json")
+
+    approved_posts = get_approved_posts(content)
+    posts = combine_content(candidates, approved_posts)
+
+    for post in posts:
+        player_name = post["player"].lower().replace(" ", "")
+        image_path = Path("assets/player_images") / f"{player_name}.png"
+
+        if not image_path.exists():
+            print(f"Skipping {post['player']}: no player image found.")
+            continue
+
+        generate_player_graphic(post, str(image_path))

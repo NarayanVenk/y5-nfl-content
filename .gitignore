@@ -1,4 +1,9 @@
 .venv/
 __pycache__/
 .DS_Store
+# NFL team logos
 assets/team_logos/*.png
+# Generated graphics
+output/
+# NFL player photos
+assets/player_images/
