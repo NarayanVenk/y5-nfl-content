@@ -40,6 +40,49 @@ def get_player_stats(stats: pl.DataFrame, player_name: str) -> dict:
 
 
 
+def get_game_context(
+    games: pl.DataFrame,
+    team: str,
+    week: int
+) -> dict:
+    game = games.filter(
+        (pl.col("week") == week)
+        & (
+            (pl.col("home_team") == team)
+            | (pl.col("away_team") == team)
+        )
+    )
+
+    if game.is_empty():
+        raise ValueError(f"No game found for {team} in Week {week}")
+
+    game_data = game.row(0, named=True)
+
+    if game_data["home_team"] == team:
+        opponent = game_data["away_team"]
+        team_score = game_data["home_score"]
+        opponent_score = game_data["away_score"]
+    else:
+        opponent = game_data["home_team"]
+        team_score = game_data["away_score"]
+        opponent_score = game_data["home_score"]
+
+    if team_score > opponent_score:
+        result = "W"
+    elif team_score < opponent_score:
+        result = "L"
+    else:
+        result = "T"
+
+    return {
+        "opponent": opponent,
+        "team_score": team_score,
+        "opponent_score": opponent_score,
+        "result": result
+    }
+
+
+
 def generate_readable_stat_line(player: dict) -> str:
     position = player["position"]
 
