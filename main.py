@@ -1,21 +1,30 @@
 from src.fetch_data import load_weekly_stats
-from src.rank_players import filter_offensive_players
+from src.rank_players import rank_quarterbacks
+import polars as pl
 
+pl.Config.set_tbl_cols(-1)
 
 def main():
     stats = load_weekly_stats(2026, 1)
-    offensive_players = filter_offensive_players(stats)
+    quarterbacks = rank_quarterbacks(stats)
 
-    print(offensive_players.select([
-        "player_display_name",
-        "position",
-        "team",
-        "fantasy_points_ppr"
-    ]).head(20))
-
-    print(f"\nOffensive players: {offensive_players.height}")
+    print(
+        quarterbacks.select([
+            "player_display_name",
+            "team",
+            "passing_yards",
+            "passing_tds",
+            "rushing_yards",
+            "rushing_tds",
+            "passing_interceptions",
+            "fantasy_points",
+            "post_score",
+            "final_score"
+        ]).head(10)
+    )
 
 
 if __name__ == "__main__":
     main()
+
 
