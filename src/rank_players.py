@@ -30,3 +30,26 @@ def rank_quarterbacks(stats: pl.DataFrame) -> pl.DataFrame:
     )
 
     return quarterbacks.sort("final_score", descending=True)
+
+
+def rank_running_backs(stats: pl.DataFrame) -> pl.DataFrame:
+    running_backs = stats.filter(pl.col("position") == "RB")
+
+    running_backs = running_backs.with_columns(
+        (
+            pl.col("rushing_yards") * 0.15
+            + pl.col("receiving_yards") * 0.15
+            + pl.col("receptions") * 2
+            + pl.col("rushing_tds") * 15
+            + pl.col("receiving_tds") * 15
+        ).alias("post_score")
+    )
+
+    running_backs = running_backs.with_columns(
+        (
+            pl.col("post_score") * 0.8
+            + pl.col("fantasy_points_ppr") * 3 * 0.2
+        ).alias("final_score")
+    )
+
+    return running_backs.sort("final_score", descending=True)
