@@ -61,3 +61,19 @@ def generate_readable_stat_line(player: dict) -> str:
             f"{player['receiving_yards']} REC YDS | "
             f"{total_tds} total TD"
         )
+
+
+def generate_caption(player: dict) -> str:
+    name = player["player"]
+    stat_line = generate_readable_stat_line(player)
+
+    headline = f"{name.upper()} WENT OFF 🔥"
+
+    caption = (
+        f"{headline}\n\n"
+        f"{name} put up an impressive performance this week:\n\n"
+        f"{stat_line}\n\n"
+        f"What did you think of the performance from {name}? 👀"
+    )
+
+    return caption
