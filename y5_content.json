@@ -1,4 +1,3 @@
-
 [
     {
         "player": "Caleb Williams",
@@ -6,7 +5,25 @@
         "season": 2026,
         "week": 1,
         "graphic_headline": "QB1 SEASON?",
-        "caption": "CALEB WILLIAMS IS DIFFERENT 🔥\n\nWilliams put on a show in Week 1:\n\n334 total yards | 4 total TD | 0 INT\n\nThe Bears quarterback threw for 269 yards and 2 touchdowns while adding 65 yards and 2 scores on the ground as Chicago defeated Carolina 59-37.\n\nIs Caleb Williams ready to take the next step this season? 👀\n\n#nfl #bears #calebwilliams #football",
+        "caption": "CALEB WILLIAMS IS MAKING A STATEMENT 🔥\n\nWilliams went off in Week 1:\n\n334 total yards | 4 total TD | 0 INT\n\nWilliams threw for 269 yards and 2 touchdowns while adding 65 rushing yards and 2 more scores on the ground as Chicago dominated Carolina 59-37.\n\nIs Caleb Williams ready to take the next step and become an elite NFL quarterback?\n\n#nfl #bears #calebwilliams #football",
+        "approved": true
+    },
+    {
+        "player": "Derrick Henry",
+        "team": "BAL",
+        "season": 2026,
+        "week": 1,
+        "graphic_headline": "STILL ELITE",
+        "caption": "KING HENRY IS STILL ELITE 👑\n\nHenry dominated in Week 1:\n\n144 rushing yards | 3 rushing TD\n\nHenry found the end zone three times on the ground as Baltimore defeated Indianapolis 41-23 to open the season.\n\nIs Derrick Henry still one of the best running backs in football?\n\n#nfl #ravens #derrickhenry #football",
+        "approved": true
+    },
+    {
+        "player": "Jalen Coker",
+        "team": "CAR",
+        "season": 2026,
+        "week": 1,
+        "graphic_headline": "ELITE WR?",
+        "caption": "JALEN COKER WENT OFF 🔥\n\nCoker had a huge Week 1 performance:\n\n8 REC | 138 YDS | 2 TD\n\nCoker caught 8 passes for 138 yards and 2 touchdowns in Carolina's 59-37 loss to Chicago, emerging as one of the Panthers' biggest offensive bright spots.\n\nCould Jalen Coker establish himself as one of the NFL's top young receivers?\n\n#nfl #panthers #jalencoker #football",
         "approved": true
     }
 ]
