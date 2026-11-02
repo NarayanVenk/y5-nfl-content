@@ -77,3 +77,40 @@ def rank_receivers(stats: pl.DataFrame, position: str) -> pl.DataFrame:
     )
 
     return receivers.sort("final_score", descending=True)
+
+
+
+def rank_all_players(stats: pl.DataFrame) -> pl.DataFrame:
+    quarterbacks = rank_quarterbacks(stats)
+    running_backs = rank_running_backs(stats)
+    wide_receivers = rank_receivers(stats, "WR")
+    tight_ends = rank_receivers(stats, "TE")
+
+    rankings = []
+
+    for players in [
+        quarterbacks,
+        running_backs,
+        wide_receivers,
+        tight_ends
+    ]:
+        players = players.with_columns(
+            pl.col("final_score")
+            .rank(method="ordinal", descending=True)
+            .alias("position_rank")
+        )
+
+        rankings.append(
+            players.select([
+                "player_display_name",
+                "team",
+                "position",
+                "final_score",
+                "position_rank"
+            ])
+        )
+
+    return pl.concat(rankings).sort(
+        ["position_rank", "final_score"],
+        descending=[False, True]
+    )
