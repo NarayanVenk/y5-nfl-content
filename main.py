@@ -7,6 +7,10 @@ import nflreadpy as nfl
 
 pl.Config.set_tbl_cols(-1)
 
+SEASON = 2026
+WEEK = 1
+NUM_CANDIDATES = 10
+
 def main():
     stats = load_weekly_stats(2026, 1)
     quarterbacks = rank_quarterbacks(stats)
@@ -85,13 +89,14 @@ def main():
     print("\nCALEB WILLIAMS CAPTION")
     print(generate_caption(caleb))
 
-    games = nfl.load_schedules(seasons=[2026])
+    games = nfl.load_schedules(seasons=[SEASON])
     export_candidates(
-    stats,
-    all_players.head(10),
-    games,
-    1,
-    "y5_candidates.json"
+    stats=stats,
+    rankings=all_players.head(NUM_CANDIDATES),
+    games=games,
+    week=WEEK,
+    season=SEASON,
+    filename="y5_candidates.json"
     )
 
     print("Exported top 10 Y5 candidates!")

@@ -10,6 +10,7 @@ def export_candidates(
     rankings: pl.DataFrame,
     games: pl.DataFrame,
     week: int,
+    season: int,
     filename: str
 ) -> None:
     candidates = []
@@ -20,6 +21,8 @@ def export_candidates(
         player["position_rank"] = row["position_rank"]
         player["final_score"] = round(row["final_score"], 2)
         player["stat_line"] = generate_readable_stat_line(player)
+        player["season"] = season
+        player["week"] = week
 
         game_context = get_game_context(games, player["team"], week)
         player.update(game_context)
