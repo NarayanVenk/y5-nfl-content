@@ -1,5 +1,6 @@
 from src.fetch_data import load_weekly_stats
 from src.rank_players import rank_quarterbacks, rank_running_backs, rank_receivers, rank_all_players
+from src.player_content import get_player_stats
 import polars as pl
 
 pl.Config.set_tbl_cols(-1)
@@ -66,6 +67,12 @@ def main():
     print("\nTOP Y5 POST CANDIDATES")
     with pl.Config(tbl_rows=20):
         print(all_players.head(20))
+
+    print("\nCALEB WILLIAMS CONTENT DATA")
+    print(get_player_stats(stats, "Caleb Williams"))
+
+    print("\nJALEN COKER CONTENT DATA")
+    print(get_player_stats(stats, "Jalen Coker"))
 
 
 
