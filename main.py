@@ -1,6 +1,7 @@
 from src.fetch_data import load_weekly_stats
 from src.rank_players import rank_quarterbacks, rank_running_backs, rank_receivers, rank_all_players
 from src.player_content import get_player_stats, generate_readable_stat_line, generate_caption
+from src.export_content import export_candidates
 import polars as pl
 
 pl.Config.set_tbl_cols(-1)
@@ -82,6 +83,14 @@ def main():
 
     print("\nCALEB WILLIAMS CAPTION")
     print(generate_caption(caleb))
+
+    export_candidates(
+    stats,
+    all_players.head(10),
+    "y5_candidates.json"
+    )
+
+    print("Exported top 10 Y5 candidates!")
 
 if __name__ == "__main__":
     main()

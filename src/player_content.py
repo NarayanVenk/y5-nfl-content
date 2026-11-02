@@ -53,6 +53,17 @@ def generate_readable_stat_line(player: dict) -> str:
             f"{player['interceptions']} INT"
         )
 
+    
+    elif position == "RB":
+        total_tds = player["rushing_tds"] + player["receiving_tds"]
+
+        return (
+            f"{player['rushing_yards']} RUSH YDS | "
+            f"{player['receptions']} REC | "
+            f"{player['receiving_yards']} REC YDS | "
+            f"{total_tds} total TD"
+        )
+
     else:
         total_tds = player["receiving_tds"] + player["rushing_tds"]
 
