@@ -53,3 +53,27 @@ def rank_running_backs(stats: pl.DataFrame) -> pl.DataFrame:
     )
 
     return running_backs.sort("final_score", descending=True)
+
+
+
+def rank_receivers(stats: pl.DataFrame, position: str) -> pl.DataFrame:
+    receivers = stats.filter(pl.col("position") == position)
+
+    receivers = receivers.with_columns(
+        (
+            pl.col("receiving_yards") * 0.2
+            + pl.col("receptions") * 2
+            + pl.col("receiving_tds") * 15
+            + pl.col("rushing_yards") * 0.15
+            + pl.col("rushing_tds") * 15
+        ).alias("post_score")
+    )
+
+    receivers = receivers.with_columns(
+        (
+            pl.col("post_score") * 0.8
+            + pl.col("fantasy_points_ppr") * 3 * 0.2
+        ).alias("final_score")
+    )
+
+    return receivers.sort("final_score", descending=True)

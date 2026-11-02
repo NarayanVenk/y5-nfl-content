@@ -1,5 +1,5 @@
 from src.fetch_data import load_weekly_stats
-from src.rank_players import rank_quarterbacks, rank_running_backs
+from src.rank_players import rank_quarterbacks, rank_running_backs, rank_receivers
 import polars as pl
 
 pl.Config.set_tbl_cols(-1)
@@ -40,6 +40,26 @@ def main():
             "final_score"
         ]).head(10)
     )
+
+    wide_receivers = rank_receivers(stats, "WR")
+    tight_ends = rank_receivers(stats, "TE")
+
+    columns = [
+        "player_display_name",
+        "team",
+        "receptions",
+        "receiving_yards",
+        "receiving_tds",
+        "fantasy_points_ppr",
+        "post_score",
+        "final_score"
+    ]
+
+    print("\nTOP WIDE RECEIVERS")
+    print(wide_receivers.select(columns).head(10))
+
+    print("\nTOP TIGHT ENDS")
+    print(tight_ends.select(columns).head(10))
 
 
 if __name__ == "__main__":
