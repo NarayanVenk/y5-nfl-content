@@ -1,11 +1,46 @@
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from src.content_manager import load_content, get_approved_posts, combine_content
-
 import json
+
 
 GRAPHIC_WIDTH = 1080
 GRAPHIC_HEIGHT = 1350
+
+TEAM_COLORS = {
+    "ARI": "#97233F",
+    "ATL": "#A71930",
+    "BAL": "#241773",
+    "BUF": "#00338D",
+    "CAR": "#0085CA",
+    "CHI": "#0B162A",
+    "CIN": "#FB4F14",
+    "CLE": "#311D00",
+    "DAL": "#003594",
+    "DEN": "#FB4F14",
+    "DET": "#0076B6",
+    "GB": "#203731",
+    "HOU": "#03202F",
+    "IND": "#002C5F",
+    "JAX": "#006778",
+    "KC": "#E31837",
+    "LAC": "#0080C6",
+    "LAR": "#003594",
+    "LV": "#A5ACAF",
+    "MIA": "#008E97",
+    "MIN": "#4F2683",
+    "NE": "#002244",
+    "NO": "#D3BC8D",
+    "NYG": "#0B2265",
+    "NYJ": "#125740",
+    "PHI": "#004C54",
+    "PIT": "#FFB612",
+    "SEA": "#002244",
+    "SF": "#AA0000",
+    "TB": "#D50A0A",
+    "TEN": "#0C2340",
+    "WAS": "#5A1414"
+}
 
 
 def create_background(player_image_path: str) -> Image.Image:
@@ -43,6 +78,34 @@ def add_dark_overlay(image: Image.Image) -> Image.Image:
 
     # Blend 20% of the overlay with 80% of the original photo
     return Image.blend(image, overlay, 0.20)
+
+
+def add_team_gradient(image: Image.Image, team: str) -> Image.Image:
+    color = TEAM_COLORS.get(team, "#101820")
+
+    rgb = tuple(
+        int(color[i:i + 2], 16)
+        for i in (1, 3, 5)
+    )
+
+    gradient = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(gradient)
+
+    start_y = int(image.height * 0.45)
+
+    for y in range(start_y, image.height):
+        progress = (y - start_y) / (image.height - start_y)
+        alpha = int(210 * progress ** 1.5)
+
+        draw.line(
+            [(0, y), (image.width, y)],
+            fill=(*rgb, alpha)
+        )
+
+    return Image.alpha_composite(
+        image.convert("RGBA"),
+        gradient
+    ).convert("RGB")
 
 
 def add_y5_logo(image: Image.Image) -> Image.Image:
@@ -236,6 +299,7 @@ def get_graphic_stats(player: dict) -> list[tuple]:
 def generate_player_graphic(post: dict, player_image_path: str) -> None:
     background = create_background(player_image_path)
     background = add_dark_overlay(background)
+    background = add_team_gradient(background, post["team"])
 
     background = add_y5_logo(background)
     background = add_team_logo(background, post["team"])
