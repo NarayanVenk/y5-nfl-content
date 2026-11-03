@@ -2,7 +2,6 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from src.content_manager import load_content, get_approved_posts, combine_content
 from main import SEASON, WEEK
-import json
 
 
 GRAPHIC_WIDTH = 1080

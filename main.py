@@ -1,15 +1,16 @@
+import json
+from pathlib import Path
+import nflreadpy as nfl
 from src.fetch_data import load_weekly_stats
 from src.rank_players import rank_all_players
 from src.export_content import export_candidates
-import nflreadpy as nfl
 from src.content_manager import load_content, get_approved_posts, combine_content
-from pathlib import Path
-import json
 
 
 SEASON = 2026
-WEEK = 1
+WEEK = 2
 NUM_CANDIDATES = 10
+
 
 def main():
     # create a directory for this season's data
@@ -20,34 +21,25 @@ def main():
     candidates_file = data_dir / f"week{WEEK}_candidates.json"
     content_file = data_dir / f"week{WEEK}_content.json"
 
-    
-    # load weekly player stats and game schedules
-    stats = load_weekly_stats(SEASON, WEEK)
-    games = nfl.load_schedules(seasons=[SEASON])    
-    
     # load weekly player stats and game schedules
     stats = load_weekly_stats(SEASON, WEEK)
     games = nfl.load_schedules(seasons=[SEASON])
-    
+
     # rank players based on their performance this week
     all_players = rank_all_players(stats)
 
     # export the top candidates with their stats and game context
     export_candidates(
-    stats=stats,
-    rankings=all_players.head(NUM_CANDIDATES),
-    games=games,
-    week=WEEK,
-    season=SEASON,
-    filename=str(candidates_file)
+        stats=stats,
+        rankings=all_players.head(NUM_CANDIDATES),
+        games=games,
+        week=WEEK,
+        season=SEASON,
+        filename=str(candidates_file)
     )
 
     print(f"Exported top {NUM_CANDIDATES} Y5 candidates for {SEASON} Week {WEEK}!")
 
-
-
-
-    candidates = load_content(str(candidates_file))
     # create an empty content file for a new week
     if not content_file.exists():
         with open(content_file, "w", encoding="utf-8") as file:
@@ -55,12 +47,14 @@ def main():
 
         print(f"Created new content file: {content_file}")
 
-    # load the week's approved content
+    # load candidates and approved content
+    candidates = load_content(str(candidates_file))
     content = load_content(str(content_file))
 
     approved_posts = get_approved_posts(content)
     combined_posts = combine_content(candidates, approved_posts)
 
+    # display approved posts
     print("\nCOMBINED Y5 POSTS")
     for post in combined_posts:
         print("Player:", post["player"])
@@ -71,5 +65,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
