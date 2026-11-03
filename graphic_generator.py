@@ -1,6 +1,7 @@
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from src.content_manager import load_content, get_approved_posts, combine_content
+from main import SEASON, WEEK
 import json
 
 
@@ -330,8 +331,13 @@ def generate_player_graphic(post: dict, player_image_path: str) -> None:
 
 
 if __name__ == "__main__":
-    candidates = load_content("y5_candidates.json")
-    content = load_content("y5_content.json")
+    data_dir = Path("data") / str(SEASON)
+
+    candidates_file = data_dir / f"week{WEEK}_candidates.json"
+    content_file = data_dir / f"week{WEEK}_content.json"
+
+    candidates = load_content(str(candidates_file))
+    content = load_content(str(content_file))
 
     approved_posts = get_approved_posts(content)
     posts = combine_content(candidates, approved_posts)
